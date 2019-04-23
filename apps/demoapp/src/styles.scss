@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.flexbox-parent {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-start; /* align items in Main Axis */
+  align-items: stretch; /* align items in Cross Axis */
+  align-content: stretch; /* Extra space in Cross Axis */
+}
+
+.app-container {
+  flex-grow: 1;
+  padding: 25px;
+  background-color: #fafafa;
+}
+
+.app-page-container {
+  padding: 15px;
+}
+
+.app-sidenav {
+  width: 250px;
+}
+
+.flexbox-item-grow {
+  flex: 1; /* same as flex: 1 1 auto; */
+}
+
+.fill-area {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: flex-start; /* align items in Main Axis */
+  align-items: stretch; /* align items in Cross Axis */
+  align-content: stretch; /* Extra space in Cross Axis */
+}
+
+.footer {
+  padding: 5px;
+}
+
+.app-navbar {
+  .active {
+    background-color: #394aa5;
+  }
+}

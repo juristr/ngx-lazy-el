@@ -26,7 +26,10 @@
               "apps/demoapp/src/favicon.ico",
               "apps/demoapp/src/assets"
             ],
-            "styles": ["apps/demoapp/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/demoapp/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -80,7 +83,9 @@
               "apps/demoapp/tsconfig.app.json",
               "apps/demoapp/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -115,7 +120,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/demoapp-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -133,7 +140,9 @@
               "libs/ngx-lazy-el/tsconfig.lib.json",
               "libs/ngx-lazy-el/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -158,7 +167,7 @@
       "versionMismatch": false
     },
     "defaultCollection": "@nrwl/schematics",
-    "packageManager": "yarn"
+    "packageManager": "npm"
   },
   "schematics": {
     "@nrwl/schematics:application": {
