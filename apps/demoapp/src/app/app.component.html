@@ -8,6 +8,25 @@
   </div>
 
   <div class="flexbox-item fill-area content flexbox-item-grow">
-    <div class="app-container">Hi</div>
+    <div class="app-container">
+      <h1>Lazy Elements</h1>
+
+      <p>Click the "lazy load" button to lazily load the components.</p>
+
+      <button mat-raised-button (click)="isLoaded = !isLoaded">
+        lazy load
+      </button>
+
+      <hr />
+
+      <div *ngIf="isLoaded" ngx-lazy-el (loaded)="onLoaded($event)">
+        <app-user-list name="Juri" (save)="onSave($event)"></app-user-list>
+      </div>
+
+      <ng-container *ngIf="message">
+        <p>Message emitted from the component:</p>
+        <pre>{{ message | json }}</pre>
+      </ng-container>
+    </div>
   </div>
 </div>

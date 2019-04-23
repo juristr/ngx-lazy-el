@@ -30,7 +30,11 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "apps/demoapp/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              {
+                "input": "node_modules/document-register-element/build/document-register-element.js"
+              }
+            ]
           },
           "configurations": {
             "production": {
