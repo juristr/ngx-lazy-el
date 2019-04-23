@@ -12,7 +12,9 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "dom"],
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@juristr/ngx-lazy-el": ["libs/ngx-lazy-el/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

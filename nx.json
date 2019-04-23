@@ -13,6 +13,9 @@
     },
     "demoapp-e2e": {
       "tags": []
+    },
+    "ngx-lazy-el": {
+      "tags": []
     }
   }
 }
