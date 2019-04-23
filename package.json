@@ -5,7 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
+    "build:lib": "ng build ngx-lazy-el && cp -v *.md dist/libs/ngx-lazy-el",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx lint && ng lint",
     "e2e": "ng e2e",
@@ -51,11 +52,13 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
+    "@angular-devkit/build-ng-packagr": "~0.12.0",
     "@angular/cli": "~7.2.2",
     "@angular/compiler-cli": "^7.0.0",
     "@angular/language-service": "^7.0.0",
     "@angular-devkit/build-angular": "~0.11.2",
     "@ngrx/store-devtools": "6.1.2",
+    "ng-packagr": "^4.2.0",
     "ngrx-store-freeze": "0.2.4",
     "@nrwl/schematics": "7.5.2",
     "jasmine-marbles": "0.4.0",
@@ -72,6 +75,8 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
+    "tsickle": ">=0.34.0",
+    "tslib": "^1.9.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2",
     "prettier": "1.15.2",

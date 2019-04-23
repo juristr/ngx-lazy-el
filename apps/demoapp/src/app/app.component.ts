@@ -7,7 +7,7 @@ import { LazyCmpLoadedEvent } from '@juristr/ngx-lazy-el';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'demoapp';
+  title = 'Component Lazy Loading 💪 by ng elements';
   isLoaded = false;
   message;
   userList = [
