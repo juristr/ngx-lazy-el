@@ -2,7 +2,125 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "projects": {},
+  "projects": {
+    "demoapp": {
+      "root": "apps/demoapp/",
+      "sourceRoot": "apps/demoapp/src",
+      "projectType": "application",
+      "prefix": "juristr",
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/demoapp",
+            "index": "apps/demoapp/src/index.html",
+            "main": "apps/demoapp/src/main.ts",
+            "polyfills": "apps/demoapp/src/polyfills.ts",
+            "tsConfig": "apps/demoapp/tsconfig.app.json",
+            "assets": [
+              "apps/demoapp/src/favicon.ico",
+              "apps/demoapp/src/assets"
+            ],
+            "styles": ["apps/demoapp/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/demoapp/src/environments/environment.ts",
+                  "with": "apps/demoapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "demoapp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "demoapp:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "demoapp:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/demoapp/tsconfig.app.json",
+              "apps/demoapp/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/demoapp/jest.config.js",
+            "tsConfig": "apps/demoapp/tsconfig.spec.json",
+            "setupFile": "apps/demoapp/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "demoapp-e2e": {
+      "root": "apps/demoapp-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/demoapp-e2e/cypress.json",
+            "tsConfig": "apps/demoapp-e2e/tsconfig.e2e.json",
+            "devServerTarget": "demoapp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "demoapp:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/demoapp-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "warnings": {
       "typescriptMismatch": false,
@@ -18,5 +136,6 @@
     "@nrwl/schematics:library": {
       "style": "scss"
     }
-  }
+  },
+  "defaultProject": "demoapp"
 }
