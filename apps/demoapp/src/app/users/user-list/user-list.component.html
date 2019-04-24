@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card data-cy="user-list-card">
   Name: {{ name | json }}
   <mat-list *ngIf="users && users.length > 0; else: noUsers">
     <mat-list-item *ngFor="let user of users">{{ user.name }}</mat-list-item>
@@ -6,5 +6,7 @@
 
   <ng-template #noUsers> No users available </ng-template>
 
-  <button mat-button (click)="onSave()">Emit event</button>
+  <button data-cy="emit-event-btn" mat-button (click)="onSave()">
+    Emit event
+  </button>
 </mat-card>
