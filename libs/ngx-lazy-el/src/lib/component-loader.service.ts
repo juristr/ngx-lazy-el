@@ -3,7 +3,10 @@ import {
   NgModuleFactoryLoader,
   Injector,
   Inject,
-  NgModuleRef
+  NgModuleRef,
+  Compiler,
+  NgModuleFactory,
+  Type
 } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
 import { LazyComponentDef, LAZY_CMPS_PATH_TOKEN } from './tokens';
@@ -21,12 +24,14 @@ export class ComponentLoaderService {
 
   constructor(
     private loader: NgModuleFactoryLoader,
+    private moduleRef: NgModuleRef<any>,
     private injector: Injector,
     @Inject(LAZY_CMPS_PATH_TOKEN)
     elementModulePaths: {
       selector: string;
       loadChildren: LoadChildrenCallback;
-    }[]
+    }[],
+    private compiler: Compiler
   ) {
     const ELEMENT_MODULE_PATHS = new Map<string, any>();
     elementModulePaths.forEach(route => {
@@ -82,8 +87,23 @@ export class ComponentLoaderService {
       const path = cmpRegistryEntry.loadChildren;
 
       const loadPromise = new Promise<LazyCmpLoadedEvent>((resolve, reject) => {
-        this.loader
-          .load(path)
+        (path() as Promise<NgModuleFactory<any> | Type<any>>)
+          // this.loader
+          //   .load(path)
+          .then(elementModuleOrFactory => {
+            /**
+             * With View Engine, the NgModule factory is created and provided when loaded.
+             * With Ivy, only the NgModule class is provided loaded and must be compiled.
+             * This uses the same mechanism as the deprecated `SystemJsNgModuleLoader` in
+             * in `packages/core/src/linker/system_js_ng_module_factory_loader.ts`
+             * to pass on the NgModuleFactory, or compile the NgModule and return its NgModuleFactory.
+             */
+            if (elementModuleOrFactory instanceof NgModuleFactory) {
+              return elementModuleOrFactory;
+            } else {
+              return this.compiler.compileModuleAsync(elementModuleOrFactory);
+            }
+          })
           .then(moduleFactory => {
             const elementModuleRef = moduleFactory.create(this.injector);
 
