@@ -19,7 +19,7 @@ export class NgxLazyElModule {
     return {
       ngModule: NgxLazyElModule,
       providers: [
-        { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
+        // { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
         {
           provide: LAZY_CMPS_PATH_TOKEN,
           useValue: modulePaths

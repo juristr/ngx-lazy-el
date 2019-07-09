@@ -9,7 +9,7 @@ import { createCustomElement } from '@angular/elements';
 import { LazyComponentDef, LAZY_CMPS_PATH_TOKEN } from './tokens';
 import { Observable, of, from } from 'rxjs';
 import { LazyCmpLoadedEvent } from './lazy-cmp-loaded-event';
-import { isComponentInstance } from '@angular/core/src/render3/context_discovery';
+import { LoadChildrenCallback } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,10 @@ export class ComponentLoaderService {
     private loader: NgModuleFactoryLoader,
     private injector: Injector,
     @Inject(LAZY_CMPS_PATH_TOKEN)
-    elementModulePaths: { selector: string; loadChildren: string }[]
+    elementModulePaths: {
+      selector: string;
+      loadChildren: LoadChildrenCallback;
+    }[]
   ) {
     const ELEMENT_MODULE_PATHS = new Map<string, any>();
     elementModulePaths.forEach(route => {
