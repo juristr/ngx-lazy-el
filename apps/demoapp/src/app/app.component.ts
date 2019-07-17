@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { LazyCmpLoadedEvent } from '@juristr/ngx-lazy-el';
+import { Component, ElementRef } from '@angular/core';
+import {
+  LazyCmpLoadedEvent,
+  ComponentLoaderService
+} from '@juristr/ngx-lazy-el';
 
 @Component({
   selector: 'juristr-root',
@@ -19,6 +22,11 @@ export class AppComponent {
     }
   ];
 
+  constructor(
+    private elementRef: ElementRef,
+    private cmpLoader: ComponentLoaderService
+  ) {}
+
   onLoaded(lazyCmp: LazyCmpLoadedEvent) {
     switch (lazyCmp.selector) {
       case 'app-user-list': {
@@ -31,5 +39,17 @@ export class AppComponent {
   onSave(value) {
     console.log('Got', value);
     this.message = value.detail;
+  }
+
+  loadProgrammatically() {
+    this.cmpLoader
+      .loadComponent('app-hello-world')
+      .then((ev: LazyCmpLoadedEvent) => {
+        ev.componentInstance['message'] = 'Hi there';
+
+        this.elementRef.nativeElement
+          .querySelector('#manualLoading')
+          .prepend(ev.componentInstance);
+      });
   }
 }

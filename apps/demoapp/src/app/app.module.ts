@@ -13,6 +13,12 @@ const lazyConfig = [
     selector: 'app-user-list',
     matcher: fakeMatcher,
     loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+  },
+  {
+    selector: 'app-hello-world',
+    matcher: fakeMatcher,
+    loadChildren: () =>
+      import('./hello-world/hello-world.module').then(m => m.HelloWorldModule)
   }
 ];
 

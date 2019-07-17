@@ -22,4 +22,10 @@ describe('ngx-lazy-el should lazy load components', () => {
       .find('pre')
       .should('contain', 'Juri');
   });
+
+  it('should allow for programmatic lazy loading', () => {
+    cy.get('[data-cy="lazy-load-programmatically-button"]').click();
+
+    cy.get('#manualLoading').contains('Hi there');
+  });
 });

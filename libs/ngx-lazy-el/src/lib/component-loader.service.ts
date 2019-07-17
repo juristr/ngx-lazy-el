@@ -61,7 +61,7 @@ export class ComponentLoaderService {
 
     // Returns observable that completes when all discovered elements have been registered.
     const allRegistered = Promise.all(
-      unregisteredSelectors.map(s => this.loadComponent(s))
+      unregisteredSelectors.map(s => this.loadComponent(s, false))
     );
     return from(allRegistered);
   }
@@ -75,7 +75,7 @@ export class ComponentLoaderService {
    */
   loadComponent(
     componentTag: string,
-    createInstance = false
+    createInstance = true
   ): Promise<LazyCmpLoadedEvent> {
     if (this.elementsLoading.has(componentTag)) {
       return this.elementsLoading.get(componentTag);
@@ -123,10 +123,10 @@ export class ComponentLoaderService {
                 this.loadedCmps.set(componentTag, elementModuleRef);
 
                 // instantiate the component
-                // const componentInstance = createInstance
-                //   ? document.createElement(componentTag)
-                //   : null;
-                const componentInstance = null;
+                const componentInstance = createInstance
+                  ? document.createElement(componentTag)
+                  : null;
+                // const componentInstance = null;
 
                 resolve({
                   selector: componentTag,

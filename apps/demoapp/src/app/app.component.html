@@ -32,5 +32,17 @@
         <pre>{{ message | json }}</pre>
       </div>
     </div>
+
+    <hr />
+
+    <button
+      data-cy="lazy-load-programmatically-button"
+      mat-raised-button
+      (click)="loadProgrammatically()"
+    >
+      load programmatically
+    </button>
+
+    <div id="manualLoading"></div>
   </div>
 </div>
