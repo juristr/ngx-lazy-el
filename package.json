@@ -8,6 +8,7 @@
     "build": "ng build --prod",
     "build:lib": "ng build ngx-lazy-el && cp -v *.md LICENSE dist/libs/ngx-lazy-el",
     "publish:lib": "./tools/scripts/publishLib.sh",
+    "copy": "./tools/scripts/copy.sh",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx lint && ng lint",
     "e2e": "ng e2e",
