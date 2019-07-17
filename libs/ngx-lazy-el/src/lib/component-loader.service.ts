@@ -101,7 +101,15 @@ export class ComponentLoaderService {
             if (elementModuleOrFactory instanceof NgModuleFactory) {
               return elementModuleOrFactory;
             } else {
-              return this.compiler.compileModuleAsync(elementModuleOrFactory);
+              try {
+                return this.compiler.compileModuleAsync(elementModuleOrFactory);
+              } catch (err) {
+                // return the error
+                reject(err);
+
+                // break the promise chain
+                throw err;
+              }
             }
           })
           .then(moduleFactory => {
