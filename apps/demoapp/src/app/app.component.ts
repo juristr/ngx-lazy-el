@@ -12,6 +12,7 @@ import {
 export class AppComponent {
   title = 'Component Lazy Loading 💪 by ng elements';
   isLoaded = false;
+  multilazy = false;
   message;
   userList = [
     {

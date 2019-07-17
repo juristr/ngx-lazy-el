@@ -113,42 +113,69 @@ export class ComponentLoaderService {
             }
           })
           .then(moduleFactory => {
-            const elementModuleRef = moduleFactory.create(this.injector);
+            try {
+              const elementModuleRef = moduleFactory.create(this.injector);
 
-            const injector = elementModuleRef.injector;
-            const CustomElementComponent =
-              elementModuleRef.instance.customElementComponent;
-            const CustomElement = createCustomElement(CustomElementComponent, {
-              injector
-            });
+              const injector = elementModuleRef.injector;
 
-            // define the Angular Element
-            customElements!.define(componentTag, CustomElement);
-            customElements
-              .whenDefined(componentTag)
-              .then(() => {
-                // remember for next time
-                this.loadedCmps.set(componentTag, elementModuleRef);
+              let CustomElementComponent;
 
-                // instantiate the component
-                const componentInstance = createInstance
-                  ? document.createElement(componentTag)
-                  : null;
-                // const componentInstance = null;
+              if (
+                typeof elementModuleRef.instance.customElementComponent ===
+                'object'
+              ) {
+                CustomElementComponent =
+                  elementModuleRef.instance.customElementComponent[
+                    componentTag
+                  ];
+                if (!CustomElementComponent) {
+                  throw `You specified multiple component elements in module ${elementModuleRef} but there was no match for tag ${componentTag} in ${JSON.stringify(
+                    elementModuleRef.instance.customElementComponent
+                  )}. Make sure the selector in the module is aligned with the one specified in the lazy module definition.`;
+                }
+              } else {
+                CustomElementComponent =
+                  elementModuleRef.instance.customElementComponent;
+              }
 
-                resolve({
-                  selector: componentTag,
-                  componentInstance
+              const CustomElement = createCustomElement(
+                CustomElementComponent,
+                {
+                  injector
+                }
+              );
+
+              // define the Angular Element
+              customElements!.define(componentTag, CustomElement);
+              customElements
+                .whenDefined(componentTag)
+                .then(() => {
+                  // remember for next time
+                  this.loadedCmps.set(componentTag, elementModuleRef);
+
+                  // instantiate the component
+                  const componentInstance = createInstance
+                    ? document.createElement(componentTag)
+                    : null;
+                  // const componentInstance = null;
+
+                  resolve({
+                    selector: componentTag,
+                    componentInstance
+                  });
+                })
+                .then(() => {
+                  this.elementsLoading.delete(componentTag);
+                  this.componentsToLoad.delete(componentTag);
+                })
+                .catch(err => {
+                  this.elementsLoading.delete(componentTag);
+                  return Promise.reject(err);
                 });
-              })
-              .then(() => {
-                this.elementsLoading.delete(componentTag);
-                this.componentsToLoad.delete(componentTag);
-              })
-              .catch(err => {
-                this.elementsLoading.delete(componentTag);
-                return Promise.reject(err);
-              });
+            } catch (err) {
+              reject(err);
+              throw err;
+            }
           })
           .catch(err => {
             this.elementsLoading.delete(componentTag);

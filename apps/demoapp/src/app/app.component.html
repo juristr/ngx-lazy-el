@@ -44,5 +44,20 @@
     </button>
 
     <div id="manualLoading"></div>
+
+    <hr />
+
+    <button
+      data-cy="lazy-load-multilazy-button"
+      mat-raised-button
+      (click)="multilazy = true"
+    >
+      load multiple lazy
+    </button>
+
+    <div *ngIf="multilazy" ngx-lazy-el data-cy="multi-cmps">
+      <juristr-cmp1></juristr-cmp1>
+      <juristr-cmp2></juristr-cmp2>
+    </div>
   </div>
 </div>

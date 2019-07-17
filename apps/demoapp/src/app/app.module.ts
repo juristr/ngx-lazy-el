@@ -19,6 +19,22 @@ const lazyConfig = [
     matcher: fakeMatcher,
     loadChildren: () =>
       import('./hello-world/hello-world.module').then(m => m.HelloWorldModule)
+  },
+  {
+    selector: 'juristr-cmp1',
+    matcher: fakeMatcher,
+    loadChildren: () =>
+      import('./multi-components/multi-components.module').then(
+        m => m.MultiComponentsModule
+      )
+  },
+  {
+    selector: 'juristr-cmp2',
+    matcher: fakeMatcher,
+    loadChildren: () =>
+      import('./multi-components/multi-components.module').then(
+        m => m.MultiComponentsModule
+      )
   }
 ];
 
