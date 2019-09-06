@@ -87,7 +87,7 @@
               "apps/demoapp/tsconfig.app.json",
               "apps/demoapp/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!apps/demoapp/**"]
           }
         },
         "test": {
@@ -122,7 +122,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/demoapp-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!apps/demoapp-e2e/**"]
           }
         }
       }
@@ -147,7 +147,7 @@
               "libs/ngx-lazy-el/tsconfig.lib.json",
               "libs/ngx-lazy-el/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!libs/ngx-lazy-el/**"]
           }
         },
         "test": {
