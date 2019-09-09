@@ -6,7 +6,8 @@ import {
   NgModuleRef,
   Compiler,
   NgModuleFactory,
-  Type
+  Type,
+  ChangeDetectorRef
 } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
 import { LazyComponentDef, LAZY_CMPS_PATH_TOKEN } from './tokens';
@@ -40,6 +41,10 @@ export class ComponentLoaderService {
     this.componentsToLoad = ELEMENT_MODULE_PATHS;
   }
 
+  getComponentsToLoad() {
+    return this.componentsToLoad.keys();
+  }
+
   /**
    * Heavily inspired by the Angular elements loader on the official repo
    */
@@ -53,6 +58,33 @@ export class ComponentLoaderService {
     // already registered elements
     const alreadyRegistered = Array.from(this.loadedCmps.keys()).filter(s =>
       element.querySelector(s)
+    );
+
+    // add the already registered in...elements won't be recreated
+    // the "loadComponent(...)"
+    unregisteredSelectors.push(...alreadyRegistered);
+
+    // Returns observable that completes when all discovered elements have been registered.
+    const allRegistered = Promise.all(
+      unregisteredSelectors.map(async s => {
+        // element.querySelector(s).remove();
+        const result = await this.loadComponent(s, true);
+        return result;
+      })
+    );
+    return from(allRegistered);
+  }
+
+  loadContainedCustomElements2(
+    tags: string[]
+  ): Observable<LazyCmpLoadedEvent[]> {
+    const unregisteredSelectors = Array.from(
+      this.componentsToLoad.keys()
+    ).filter(s => tags.find(x => x.toLowerCase() === s.toLowerCase()));
+
+    // already registered elements
+    const alreadyRegistered = Array.from(this.loadedCmps.keys()).filter(s =>
+      tags.find(x => x.toLowerCase() === s.toLowerCase())
     );
 
     // add the already registered in...elements won't be recreated
@@ -115,31 +147,30 @@ export class ComponentLoaderService {
           .then(moduleFactory => {
             try {
               const elementModuleRef = moduleFactory.create(this.injector);
-
               const injector = elementModuleRef.injector;
 
-              let CustomElementComponent;
+              let customElementComponent;
 
               if (
                 typeof elementModuleRef.instance.customElementComponent ===
                 'object'
               ) {
-                CustomElementComponent =
+                customElementComponent =
                   elementModuleRef.instance.customElementComponent[
                     componentTag
                   ];
-                if (!CustomElementComponent) {
+                if (!customElementComponent) {
                   throw `You specified multiple component elements in module ${elementModuleRef} but there was no match for tag ${componentTag} in ${JSON.stringify(
                     elementModuleRef.instance.customElementComponent
                   )}. Make sure the selector in the module is aligned with the one specified in the lazy module definition.`;
                 }
               } else {
-                CustomElementComponent =
+                customElementComponent =
                   elementModuleRef.instance.customElementComponent;
               }
 
               const CustomElement = createCustomElement(
-                CustomElementComponent,
+                customElementComponent,
                 {
                   injector
                 }
@@ -152,13 +183,11 @@ export class ComponentLoaderService {
                 .then(() => {
                   // remember for next time
                   this.loadedCmps.set(componentTag, elementModuleRef);
-
                   // instantiate the component
                   const componentInstance = createInstance
                     ? document.createElement(componentTag)
                     : null;
                   // const componentInstance = null;
-
                   resolve({
                     selector: componentTag,
                     componentInstance

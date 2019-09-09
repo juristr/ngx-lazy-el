@@ -4,38 +4,105 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ChangeDetectorRef,
+  ViewContainerRef,
+  TemplateRef,
+  ContentChild,
+  ContentChildren,
+  AfterContentInit,
+  Input
 } from '@angular/core';
 import { ComponentLoaderService } from './component-loader.service';
 import { LazyCmpLoadedEvent } from './lazy-cmp-loaded-event';
 
 @Directive({
-  selector: 'ngx-lazy-el, [ngx-lazy-el]'
+  selector: '[ngxLazyEl]'
 })
 export class LazyLoadDirective implements OnInit, OnDestroy {
+  @Input() ngxLazyEl: string[];
   @Output() loaded = new EventEmitter<LazyCmpLoadedEvent>();
 
   constructor(
     private elementRef: ElementRef,
-    private componentLoader: ComponentLoaderService
+    private componentLoader: ComponentLoaderService,
+    private cd: ChangeDetectorRef,
+    private vcr: ViewContainerRef,
+    private template: TemplateRef<any>
   ) {}
 
   ngOnInit() {
+    let nodeTags: string[] = this.ngxLazyEl;
+
+    if (!nodeTags) {
+      // try to automatically infer the elemements
+
+      const template = this.template.createEmbeddedView({});
+      if (template.rootNodes[0].children.length > 0) {
+        // we probably have a container with elements in it, so try to load all of them
+        // lazily
+        nodeTags = [...template.rootNodes[0].children].map(x =>
+          x.tagName.toLowerCase()
+        );
+      } else {
+        nodeTags = [template.rootNodes[0].tagName.toLowerCase()];
+      }
+
+      // if (this.isIvyMode()) {
+      //   if (
+      //     template['_lView'] &&
+      //     template['_lView'][19] &&
+      //     template['_lView'][19].children &&
+      //     template['_lView'][19].children.length > 0
+      //   ) {
+      //     // in Ivy mode if we have multiple children
+      //     nodeTags = [...template['_lView'][19].children].map(x =>
+      //       x.tagName.toLowerCase()
+      //     );
+      //   } else {
+      //     nodeTags = [template['_lView'][19].tagName.toLowerCase()];
+      //     // if ((template as any)._declarationTContainer) {
+      //     //   nodeTags = [(template as any)._declarationTContainer.tagName];
+      //     // }
+      //   }
+      // } else {
+      //   // ViewEngine mode (if there are multiple, we're going to load them all)
+      //   nodeTags = (this.template as any)._def.element.template.nodes.map(
+      //     x => x.element.name
+      //   );
+      // }
+    }
+
+    if (!nodeTags) {
+      throw new Error(
+        `Unable to automatically determine the dynamic element selectors. Alternatively you can pass them in via the *ngxLazyEl="['my-lazy-el']"`
+      );
+    }
+
     this.componentLoader
-      .loadContainedCustomElements(this.elementRef.nativeElement)
+      // .loadContainedCustomElements(this.elementRef.nativeElement)
+      .loadContainedCustomElements2(nodeTags)
       .subscribe(elements => {
-        elements.forEach(x => {
-          const elInstance = this.elementRef.nativeElement.querySelector(
-            x.selector
+        this.vcr.clear();
+        this.vcr.createEmbeddedView(this.template);
+
+        // try to get the element DOM
+        let domInstance = null;
+        if (this.elementRef.nativeElement.parentElement) {
+          domInstance = this.elementRef.nativeElement.parentElement.querySelector(
+            elements[0].selector
           );
-          if (elInstance) {
-            this.notifyComponentLoaded({
-              selector: x.selector,
-              componentInstance: elInstance
-            });
-          }
+        }
+
+        this.notifyComponentLoaded({
+          selector: nodeTags[0],
+          componentInstance: domInstance
         });
       });
+  }
+
+  private isIvyMode(): boolean {
+    return (this.template as any)._declarationTContainer;
   }
 
   private notifyComponentLoaded(lazyCmpEv: LazyCmpLoadedEvent) {

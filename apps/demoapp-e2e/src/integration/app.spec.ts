@@ -38,6 +38,16 @@ describe('ngx-lazy-el should lazy load components', () => {
   it('should allow for programmatic lazy loading', () => {
     cy.get('[data-cy="lazy-load-programmatically-button"]').click();
 
-    cy.get('#manualLoading').contains('Hi there');
+    cy.get('#manualLoading').contains('Hello, Juri');
+  });
+
+  it('should automatically infer all lazy elements within a container', () => {
+    cy.get('[data-cy="lazy-load-multilazyel-button"]').click();
+
+    cy.get('[data-cy="user-list-card"]').as('user-list');
+
+    cy.get('@user-list')
+      .find('mat-list-item')
+      .should('have.length.gt', 1);
   });
 });

@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared';
 import { NgxLazyElModule, fakeMatcher } from '@juristr/ngx-lazy-el';
+import { SimpleHelloWorldModule } from './simple-hello-world/simple-hello-world.module';
 
 const lazyConfig = [
   {
@@ -47,7 +48,9 @@ const lazyConfig = [
     NgxLazyElModule.forRoot(lazyConfig),
     NxModule.forRoot(),
     RouterModule.forRoot([], { initialNavigation: 'enabled' }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SimpleHelloWorldModule
+    // HelloWorldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

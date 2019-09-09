@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef } from '@angular/core';
 import {
   LazyCmpLoadedEvent,
   ComponentLoaderService
@@ -13,6 +13,7 @@ export class AppComponent {
   title = 'Component Lazy Loading 💪 by ng elements';
   isLoaded = false;
   multilazy = false;
+  multilazyEl = false;
   message;
   userList = [
     {
@@ -23,18 +24,26 @@ export class AppComponent {
     }
   ];
 
+  person;
+
   constructor(
     private elementRef: ElementRef,
+    private cd: ChangeDetectorRef,
     private cmpLoader: ComponentLoaderService
   ) {}
 
+  ngOnInit() {
+    setInterval(() => {
+      this.person = {
+        name: 'Peter ' + Math.random()
+      };
+      // this.cd.detectChanges();
+      // console.log(this.person.name);
+    }, 2500);
+  }
+
   onLoaded(lazyCmp: LazyCmpLoadedEvent) {
-    switch (lazyCmp.selector) {
-      case 'app-user-list': {
-        lazyCmp.componentInstance['users'] = this.userList;
-        break;
-      }
-    }
+    console.log(lazyCmp.selector + ' got instantiated');
   }
 
   onSave(value) {
@@ -44,9 +53,9 @@ export class AppComponent {
 
   loadProgrammatically() {
     this.cmpLoader
-      .loadComponent('app-hello-world')
+      .loadComponent('app-hello-world', true)
       .then((ev: LazyCmpLoadedEvent) => {
-        ev.componentInstance['message'] = 'Hi there';
+        ev.componentInstance['person'] = { name: 'Juri' };
 
         this.elementRef.nativeElement
           .querySelector('#manualLoading')

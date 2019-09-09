@@ -6,6 +6,7 @@ import { HelloWorldComponent } from './hello-world.component';
 @NgModule({
   declarations: [HelloWorldComponent],
   imports: [CommonModule, SharedModule],
+  exports: [HelloWorldComponent],
   entryComponents: [HelloWorldComponent]
 })
 export class HelloWorldModule {

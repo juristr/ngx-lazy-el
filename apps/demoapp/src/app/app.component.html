@@ -11,6 +11,15 @@
     <div class="app-container">
       <h1>Lazy Elements</h1>
 
+      <p>
+        Lazy loading Angular components can be tedious. I'm pretty sure you've
+        heard about <code>ComponentFactoryResolver</code> 😉.
+        <code>ngx-lazy-el</code> makes lazy loading easy thanks to Angular
+        Elements.
+      </p>
+
+      <h2>Lazy Load an Element</h2>
+
       <p>Click the "lazy load" button to lazily load the components.</p>
 
       <button
@@ -21,43 +30,74 @@
         lazy load
       </button>
 
-      <hr />
-
-      <div *ngIf="isLoaded" ngx-lazy-el (loaded)="onLoaded($event)">
-        <app-user-list name="Juri" (save)="onSave($event)"></app-user-list>
-      </div>
+      <ng-container *ngIf="isLoaded">
+        <app-hello-world *ngxLazyEl [person]="person"></app-hello-world>
+        <app-user-list
+          *ngxLazyEl
+          name="Juri"
+          [users]="userList"
+          (save)="onSave($event)"
+        ></app-user-list>
+      </ng-container>
 
       <div *ngIf="message" data-cy="lazy-component-message">
         <p>Message emitted from the component:</p>
         <pre>{{ message | json }}</pre>
       </div>
-    </div>
 
-    <hr />
+      <hr />
 
-    <button
-      data-cy="lazy-load-programmatically-button"
-      mat-raised-button
-      (click)="loadProgrammatically()"
-    >
-      load programmatically
-    </button>
+      <h2>Loading multiple components from the same NgModule</h2>
 
-    <div id="manualLoading"></div>
+      <button
+        data-cy="lazy-load-multilazy-button"
+        mat-raised-button
+        (click)="multilazy = true"
+      >
+        load multiple lazy
+      </button>
 
-    <hr />
+      <ng-container *ngIf="multilazy">
+        <div data-cy="multi-cmps">
+          <juristr-cmp1 *ngxLazyEl></juristr-cmp1>
+          <juristr-cmp2 *ngxLazyEl></juristr-cmp2>
+        </div>
+      </ng-container>
 
-    <button
-      data-cy="lazy-load-multilazy-button"
-      mat-raised-button
-      (click)="multilazy = true"
-    >
-      load multiple lazy
-    </button>
+      <h2>Programmatically Load a Component</h2>
 
-    <div *ngIf="multilazy" ngx-lazy-el data-cy="multi-cmps">
-      <juristr-cmp1></juristr-cmp1>
-      <juristr-cmp2></juristr-cmp2>
+      <button
+        data-cy="lazy-load-programmatically-button"
+        mat-raised-button
+        (click)="loadProgrammatically()"
+      >
+        load programmatically
+      </button>
+
+      <div id="manualLoading"></div>
+
+      <hr />
+
+      <h2>Loading all of a containers elements</h2>
+
+      <button
+        data-cy="lazy-load-multilazyel-button"
+        mat-raised-button
+        (click)="multilazyEl = true"
+      >
+        load multiple lazy
+      </button>
+
+      <ng-container *ngIf="multilazyEl">
+        <div *ngxLazyEl data-cy="multi-lazyels">
+          <app-hello-world [person]="person"></app-hello-world>
+          <app-user-list
+            name="Juri"
+            [users]="userList"
+            (save)="onSave($event)"
+          ></app-user-list>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
