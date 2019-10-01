@@ -24,8 +24,8 @@ export class ComponentLoaderService {
   private elementsLoading = new Map<string, Promise<LazyCmpLoadedEvent>>();
 
   constructor(
-    private loader: NgModuleFactoryLoader,
-    private moduleRef: NgModuleRef<any>,
+    // private loader: NgModuleFactoryLoader,
+    // private moduleRef: NgModuleRef<any>,
     private injector: Injector,
     @Inject(LAZY_CMPS_PATH_TOKEN)
     elementModulePaths: {
@@ -48,34 +48,34 @@ export class ComponentLoaderService {
   /**
    * Heavily inspired by the Angular elements loader on the official repo
    */
+  // loadContainedCustomElements(
+  //   element: HTMLElement
+  // ): Observable<LazyCmpLoadedEvent[]> {
+  //   const unregisteredSelectors = Array.from(
+  //     this.componentsToLoad.keys()
+  //   ).filter(s => element.querySelector(s));
+
+  //   // already registered elements
+  //   const alreadyRegistered = Array.from(this.loadedCmps.keys()).filter(s =>
+  //     element.querySelector(s)
+  //   );
+
+  //   // add the already registered in...elements won't be recreated
+  //   // the "loadComponent(...)"
+  //   unregisteredSelectors.push(...alreadyRegistered);
+
+  //   // Returns observable that completes when all discovered elements have been registered.
+  //   const allRegistered = Promise.all(
+  //     unregisteredSelectors.map(async s => {
+  //       // element.querySelector(s).remove();
+  //       const result = await this.loadComponent(s, true);
+  //       return result;
+  //     })
+  //   );
+  //   return from(allRegistered);
+  // }
+
   loadContainedCustomElements(
-    element: HTMLElement
-  ): Observable<LazyCmpLoadedEvent[]> {
-    const unregisteredSelectors = Array.from(
-      this.componentsToLoad.keys()
-    ).filter(s => element.querySelector(s));
-
-    // already registered elements
-    const alreadyRegistered = Array.from(this.loadedCmps.keys()).filter(s =>
-      element.querySelector(s)
-    );
-
-    // add the already registered in...elements won't be recreated
-    // the "loadComponent(...)"
-    unregisteredSelectors.push(...alreadyRegistered);
-
-    // Returns observable that completes when all discovered elements have been registered.
-    const allRegistered = Promise.all(
-      unregisteredSelectors.map(async s => {
-        // element.querySelector(s).remove();
-        const result = await this.loadComponent(s, true);
-        return result;
-      })
-    );
-    return from(allRegistered);
-  }
-
-  loadContainedCustomElements2(
     tags: string[]
   ): Observable<LazyCmpLoadedEvent[]> {
     const unregisteredSelectors = Array.from(

@@ -1,13 +1,7 @@
-import {
-  NgModule,
-  ModuleWithProviders,
-  NgModuleFactoryLoader,
-  SystemJsNgModuleLoader
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LAZY_CMPS_PATH_TOKEN } from './tokens';
-import { ROUTES } from '@angular/router';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { LazyLoadDirective } from './lazy-load.directive';
+import { LAZY_CMPS_PATH_TOKEN } from './tokens';
 
 @NgModule({
   imports: [CommonModule],
@@ -23,11 +17,6 @@ export class NgxLazyElModule {
         {
           provide: LAZY_CMPS_PATH_TOKEN,
           useValue: modulePaths
-        },
-        {
-          provide: ROUTES,
-          useValue: modulePaths,
-          multi: true
         }
       ]
     };

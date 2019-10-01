@@ -47,30 +47,6 @@ export class LazyLoadDirective implements OnInit, OnDestroy {
       } else {
         nodeTags = [template.rootNodes[0].tagName.toLowerCase()];
       }
-
-      // if (this.isIvyMode()) {
-      //   if (
-      //     template['_lView'] &&
-      //     template['_lView'][19] &&
-      //     template['_lView'][19].children &&
-      //     template['_lView'][19].children.length > 0
-      //   ) {
-      //     // in Ivy mode if we have multiple children
-      //     nodeTags = [...template['_lView'][19].children].map(x =>
-      //       x.tagName.toLowerCase()
-      //     );
-      //   } else {
-      //     nodeTags = [template['_lView'][19].tagName.toLowerCase()];
-      //     // if ((template as any)._declarationTContainer) {
-      //     //   nodeTags = [(template as any)._declarationTContainer.tagName];
-      //     // }
-      //   }
-      // } else {
-      //   // ViewEngine mode (if there are multiple, we're going to load them all)
-      //   nodeTags = (this.template as any)._def.element.template.nodes.map(
-      //     x => x.element.name
-      //   );
-      // }
     }
 
     if (!nodeTags) {
@@ -81,7 +57,7 @@ export class LazyLoadDirective implements OnInit, OnDestroy {
 
     this.componentLoader
       // .loadContainedCustomElements(this.elementRef.nativeElement)
-      .loadContainedCustomElements2(nodeTags)
+      .loadContainedCustomElements(nodeTags)
       .subscribe(elements => {
         this.vcr.clear();
         this.vcr.createEmbeddedView(this.template);
