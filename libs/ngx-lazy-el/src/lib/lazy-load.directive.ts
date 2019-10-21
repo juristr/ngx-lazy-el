@@ -20,7 +20,7 @@ import { LazyCmpLoadedEvent } from './lazy-cmp-loaded-event';
   selector: '[ngxLazyEl]'
 })
 export class LazyLoadDirective implements OnInit, OnDestroy {
-  @Input() ngxLazyEl: string[];
+  // @Input() ngxLazyEl: string[] | string | null;
   @Output() loaded = new EventEmitter<LazyCmpLoadedEvent>();
 
   constructor(
@@ -32,7 +32,7 @@ export class LazyLoadDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    let nodeTags: string[] = this.ngxLazyEl;
+    let nodeTags: string[]; // = this.ngxLazyEl;
 
     if (!nodeTags) {
       // try to automatically infer the elemements
