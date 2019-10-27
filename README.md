@@ -4,8 +4,6 @@
 
 Easy lazy loading components 💪 by Angular Elements.
 
-**Important note:** for now this is an experiment and still needs to be battle-tested. **API might break!** Meanwhile, follow me [@juristr](https://twitter.com/juristr)) for questions/ideas/getting notified about updates.
-
 ## How to use it
 
 ### Install Angular Elements on your project
