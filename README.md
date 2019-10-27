@@ -1,4 +1,4 @@
-# ngx-lazy-el (alpha)
+# ngx-lazy-el
 
 [![npm version](https://badge.fury.io/js/%40juristr%2Fngx-lazy-el.svg)](https://badge.fury.io/js/%40juristr%2Fngx-lazy-el)
 
