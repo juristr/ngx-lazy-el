@@ -30,7 +30,7 @@ $ yarn add @juristr/ngx-lazy-el
 
 ### Lazy load a component
 
-#### Configure the Module containing the lazy loaded component
+#### 1) Configure the Module containing the lazy loaded component
 
 First of all, expose the Angular Component that should be loaded via a `customElementComponent` property.
 
@@ -46,7 +46,7 @@ export class HelloWorldModule {
 }
 ```
 
-#### Define the lazy component map in your AppModule
+#### 2) Define the lazy component map in your AppModule
 
 Just like with the Angular Router, define the map of component selector and lazy module.
 
@@ -73,7 +73,7 @@ const lazyConfig = [
 export class AppModule {}
 ```
 
-#### Use the lazy loaded Component
+#### 3) Use the lazy loaded Component
 
 To use the lazy loaded component in another module, first of all register the `CUSTOM_ELEMENT_SCHEMA`.
 
@@ -82,14 +82,15 @@ import { ..., CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [NgxLazyElModule]
   ...
 })
 export class SomeModule {}
 ```
 
-That is needed because otherwise Angular won't recognize the tag as it is no more an Angular Component, but Custom Element.
+That is needed because otherwise Angular won't recognize the tag as it is no more an Angular Component, but Custom Element. Also note that I import the `NgxLazyElModule` if you haven't already. Otherwise the `*ngxLazyEl` directive won't work.
 
-Next, you can just use the Custom Element by applying the `*ngxLazyEl` directive.
+Now you can just use the Custom Element by applying the `*ngxLazyEl` directive.
 
 ```
 <app-hello-world *ngxLazyEl [person]="person"></app-hello-world>
