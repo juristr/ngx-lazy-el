@@ -7,8 +7,10 @@ import {
   Compiler,
   NgModuleFactory,
   Type,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  PLATFORM_ID
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { createCustomElement } from '@angular/elements';
 import { LazyComponentDef, LAZY_CMPS_PATH_TOKEN } from './tokens';
 import { Observable, of, from } from 'rxjs';
@@ -28,10 +30,11 @@ export class ComponentLoaderService {
     // private moduleRef: NgModuleRef<any>,
     private injector: Injector,
     @Inject(LAZY_CMPS_PATH_TOKEN)
-    elementModulePaths: {
+      elementModulePaths: {
       selector: string;
       loadChildren: LoadChildrenCallback;
     }[],
+    @Inject(PLATFORM_ID) private platformId: string,
     private compiler: Compiler
   ) {
     const ELEMENT_MODULE_PATHS = new Map<string, any>();
@@ -145,6 +148,10 @@ export class ComponentLoaderService {
             }
           })
           .then(moduleFactory => {
+            if (!isPlatformBrowser(this.platformId)) {
+              return;
+            }
+
             try {
               const elementModuleRef = moduleFactory.create(this.injector);
               const injector = elementModuleRef.injector;
@@ -158,7 +165,7 @@ export class ComponentLoaderService {
                 customElementComponent =
                   elementModuleRef.instance.customElementComponent[
                     componentTag
-                  ];
+                    ];
                 if (!customElementComponent) {
                   throw `You specified multiple component elements in module ${elementModuleRef} but there was no match for tag ${componentTag} in ${JSON.stringify(
                     elementModuleRef.instance.customElementComponent
